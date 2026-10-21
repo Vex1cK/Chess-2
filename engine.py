@@ -1,26 +1,36 @@
-from config import WHITE, BLACK, BOARD_SIZE
+from config import BLACK, BOARD_SIZE, WHITE
+
 
 class Engine:
+    def __init__(self):
+        pass
 
     # Ищет короля цвета color и возвращает его координаты, иначе вернет -1 -1
     def find_king(self, board, color: str) -> tuple[int, int] | None:
         for i in range(BOARD_SIZE):
             for j in range(BOARD_SIZE):
                 piece = board.get_piece(i, j)
-                if piece.color == color and piece.is_king == True:
-                    return tuple(i, j)
-        return tuple(-1, -1)
+                if piece is not None and piece.color == color and piece.is_king == True:
+                    return (i, j)
+        return (-1, -1)
 
     # проверяет король под шахом или нет
     def is_in_check(self, board, color: str) -> bool:
-        i_king, j_king = self.find_king(board, color)
+        res = self.find_king(board, color)
+        if res is None:
+            return False
+        i_king, j_king = res
         if i_king == -1:
             return False
-        
+
         for i in range(BOARD_SIZE):
             for j in range(BOARD_SIZE):
                 piece = board.get_piece(i, j)
-                if piece.color != color and tuple(i_king, j_king) in piece.get_moves(i, j, board):
+                if piece is None:
+                    continue
+                if piece.color != color and (i_king, j_king) in piece.get_moves(
+                    i, j, board
+                ):
                     return True
         return False
 
@@ -35,7 +45,7 @@ class Engine:
             sim_board = board.clone()
             sim_board.make_move((row, col), (i, j))
             if not self.is_in_check(sim_board, piece.color):
-                legal_moves.append(tuple(i, j))
+                legal_moves.append((i, j))
         return legal_moves
 
     # проверяет есть ли хотя бы один легальный код

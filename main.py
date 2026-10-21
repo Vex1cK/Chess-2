@@ -1,7 +1,8 @@
-from config import BLACK, WHITE
 from board import Board
+from config import BLACK, WHITE
 from engine import Engine
-from ui import render_board,parse_board
+from ui import parse_move, render_board
+
 
 def main():
     board = Board()
@@ -38,7 +39,6 @@ def main():
             print("Пока!")
             break
 
-
         move = parse_move(text)
         if move == None:
             print("Повторите ввод")
@@ -49,7 +49,6 @@ def main():
         from_row = from_pos[0]
         from_col = from_pos[1]
 
-
         piece = board.get_piece(from_row, from_col)
         if piece == None:
             print("Пусто")
@@ -59,13 +58,10 @@ def main():
             print("Это не твоя фигура")
             continue
 
-
-
-        legal_moves = engine.get_legal_moves(board, from_row, from_pos)
+        legal_moves = engine.get_legal_moves(board, from_row, from_col)
         if to_pos not in legal_moves:
             print("Так ходить нельзя!")
             continue
-
 
         board.make_move(from_pos, to_pos)
 
@@ -75,11 +71,5 @@ def main():
             current_color = WHITE
 
 
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
